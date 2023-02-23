@@ -1,0 +1,34 @@
+{{define "bulma"}}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Plate Stack</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  </head>
+  <body>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">
+       Plate Stack Calculator
+      </h1>
+      <p class="subtitle">
+        Calculate Weight Plates.
+      </p>
+      <div class="content">
+        <p>Enter the quantity of plates for <strong>One Side</strong> of the barbell.</p>
+      </div>
+      <div class="columns">
+        <div class="column">
+            {{template "form" .}}
+        </div>
+        <div class="column"></div>
+        <div class="column"></div>
+        <div class="column"></div>
+    </div>
+    <div class="columns">
+        <div class="column">{{template "results" .}}</div>
+    </div>
+  {{template "footer" .}}
+{{end}}

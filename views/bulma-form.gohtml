@@ -1,0 +1,76 @@
+{{define "form"}}
+<form action="/calc" method="post">
+<div class="field">
+    <label class="label">Barbell Weight in lbs</label>
+    <div class="control">
+      <input class="input" type="number" value="45" name="barbell">
+    </div>
+  </div>
+
+  <input type="hidden" name="plate.0.weight" value="2.5" />
+  <div class="field">
+    <label class="label">2.5 lbs Plates</label>
+    <div class="control">
+      <input class="input" type="number" placeholder="0" name="plate.0.quantity">
+    </div>
+  </div>
+  <input type="hidden" name="plate.1.weight" value="5" />
+  <div class="field">
+    <label class="label">5 lbs Plates</label>
+    <div class="control">
+      <input class="input" type="number" placeholder="0" name="plate.1.quantity">
+    </div>
+  </div>
+  <input type="hidden" name="plate.2.weight" value="10" />
+  <div class="field">
+    <label class="label">10 lbs Plates</label>
+    <div class="control">
+      <input class="input" type="number" placeholder="0" name="plate.2.quantity">
+    </div>
+  </div>
+  <input type="hidden" name="plate.3.weight" value="15" />
+  <div class="field">
+    <label class="label">15 lbs Plates</label>
+    <div class="control">
+      <input class="input" type="number" placeholder="0" name="plate.3.quantity">
+    </div>
+  </div>
+  <input type="hidden" name="plate.4.weight" value="25" />
+  <div class="field">
+    <label class="label">25 lbs Plates</label>
+    <div class="control">
+      <input class="input" type="number" placeholder="0" name="plate.4.quantity">
+    </div>
+  </div>
+  <input type="hidden" name="plate.5.weight" value="45" />
+  <div class="field">
+    <label class="label">45 lbs Plates</label>
+    <div class="control">
+      <input class="input" type="number" placeholder="0" name="plate.5.quantity">
+    </div>
+  </div>
+  <div class="control">
+    <button class="button is-primary">Submit</button>
+  </div>
+</form>
+{{end}}
+
+{{define "results"}}
+{{if .Total}}
+<p>Results.  Number plates per <strong>One Side</strong></p>
+<table class="table">
+  <tr>
+    <th>Total</th>
+    {{range .Plate}}
+    <th>{{.Weight}} lbs (per side)</th>
+    {{end}}
+  </tr>
+  <tr>
+    <td>{{.Total}} lbs</td>
+    {{range .Plate}}
+    <td>{{.Quantity}}</td>
+    {{end}}
+  </tr>
+</table>
+{{end}}
+{{end}}
