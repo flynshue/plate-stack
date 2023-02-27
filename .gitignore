@@ -4,11 +4,11 @@
 *.dll
 *.so
 *.dylib
-# ignore articles binary
-articles
+# ignore plate-stack binary
+plate-stack
 
-# except charts/articles, we need this
-!charts/articles
+# except charts/plate-stack, we need this
+!charts/plate-stack
 
 # Test binary, built with `go test -c`
 *.test
