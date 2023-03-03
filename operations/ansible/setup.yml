@@ -1,0 +1,39 @@
+---
+- hosts: plate-stack
+  remote_user: root
+  name: Setup
+  tasks:
+    - name: Manage some packages
+      include_tasks: tasks/packages.yml
+      vars:
+        extra_packages:
+          - git
+          - wget
+          - curl
+          - snap
+          - nginx
+
+    - name: Install docker
+      include_role:
+        name: geerlingguy.docker
+
+    - include_tasks: tasks/users.yml
+      vars:
+        extra_user: "{{ lookup('env', 'USER') }}"
+
+    - name: start container
+      block:
+        - shell: "docker start {{ container_name }}"
+      rescue:
+        - command:
+            cmd: "docker run --name {{ container_name }} -p {{ publish_ports }} -d {{ image }}"
+
+    - name: install certbot snap
+      community.general.snap:
+        name: certbot
+        classic: yes
+        state: present
+
+    - name: configure nginx and certbot
+      include_role:
+        name: nginx

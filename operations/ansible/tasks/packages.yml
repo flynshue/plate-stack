@@ -1,0 +1,11 @@
+---
+- name: remove nano
+  apt:
+    name: nano
+    state: absent
+
+- name: install packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ extra_packages }}"

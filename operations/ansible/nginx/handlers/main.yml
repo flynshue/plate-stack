@@ -1,0 +1,5 @@
+---
+# handlers file for nginx
+- name: reload nginx
+  shell:
+    cmd: 'nginx -s reload'
