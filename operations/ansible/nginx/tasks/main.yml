@@ -13,5 +13,13 @@
     state: link
   notify: "reload nginx"
 
-- name: configure cert
-  command: "certbot -n --nginx -d {{ inventory_hostname }} --test-cert"
+- name: configure stage cert
+  command: "{{ certbot_cmd }} --test-cert"
+  when: cert_type == "staging"
+  notify: "reload nginx"
+
+- name: configure prod cert
+  command: "{{ certbot_cmd }}"
+  when: cert_type == "prod"
+  notify: "reload nginx"
+
