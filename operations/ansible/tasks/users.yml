@@ -1,0 +1,39 @@
+---
+# tasks file for users
+- name: add wheel group
+  group:
+    state: present
+    name: wheel
+
+- name: Add wheel group to sudoers
+  community.general.sudoers:
+    name: wheel
+    group: wheel
+    commands: ALL
+    nopassword: true
+    state: present
+    validation: detect
+
+- name: Add user
+  user:
+    name: "{{ extra_user }}"
+    shell: /bin/bash
+    groups: wheel,docker
+    append: yes
+
+- name: add ssh dir
+  file:
+    owner: "{{ extra_user }}"
+    group: "{{ extra_user }}"
+    mode: '0700'
+    state: directory
+    path: "/home/{{ extra_user }}/.ssh"
+
+- name: copy the authorized keys
+  copy:
+    remote_src: yes
+    src: /root/.ssh/authorized_keys
+    dest: "/home/{{ extra_user }}/.ssh/authorized_keys"
+    owner: "{{ extra_user }}"
+    group: "{{ extra_user }}"
+    mode: '0600'

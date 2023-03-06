@@ -1,0 +1,3 @@
+# from galaxy
+roles:
+  - src: geerlingguy.docker

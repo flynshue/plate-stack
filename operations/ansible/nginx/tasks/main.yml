@@ -1,0 +1,25 @@
+---
+# tasks file for nginx
+- name: Create nginx config file for host
+  template:
+    src: nginx-conf.j2
+    dest: "/etc/nginx/sites-available/{{ inventory_hostname }}"
+  notify: "reload nginx"
+
+- name: Enable site in nginx
+  file:
+    src: "/etc/nginx/sites-available/{{ inventory_hostname }}"
+    dest: "/etc/nginx/sites-enabled/{{ inventory_hostname }}"
+    state: link
+  notify: "reload nginx"
+
+- name: configure stage cert
+  command: "{{ certbot_cmd }} --test-cert"
+  when: cert_type == "staging"
+  notify: "reload nginx"
+
+- name: configure prod cert
+  command: "{{ certbot_cmd }}"
+  when: cert_type == "prod"
+  notify: "reload nginx"
+
