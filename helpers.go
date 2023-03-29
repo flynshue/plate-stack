@@ -19,7 +19,9 @@ func (r *Results) findCombinations(target float64) {
 
 func (r *Results) backTrack(target float64, startIdx int, current []float64) {
 	if target == 0.0 {
-		r.Combinations = append(r.Combinations, current)
+		temp := make([]float64, len(current))
+		copy(temp, current)
+		r.Combinations = append(r.Combinations, temp)
 		return
 	}
 	for i := startIdx; i < len(r.PlateSet); i++ {
