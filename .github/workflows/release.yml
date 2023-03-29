@@ -49,6 +49,10 @@ jobs:
         id: version
         run: |
           version=$(cat VERSION)
+          if [[ $(git ls-remote --tags origin $VERSION) ]]; then
+            echo "Tag already exists. Please bump VERSION file."
+            exit 1
+          fi
           echo "version=${version}" >> $GITHUB_OUTPUT
 
       - name: Get dry-run mode
