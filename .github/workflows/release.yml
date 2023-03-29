@@ -49,9 +49,9 @@ jobs:
         id: version
         run: |
           version=$(cat VERSION)
-          if [[ $(git ls-remote --tags origin $VERSION) ]]; then
-            echo "Tag already exists. Please bump VERSION file."
-            exit 1
+          if [[ $(git ls-remote --tags origin | grep $version) ]]; then
+              echo "Tag v$version already exists. Please bump VERSION file."
+              exit 1
           fi
           echo "version=${version}" >> $GITHUB_OUTPUT
 
