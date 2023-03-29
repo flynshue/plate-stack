@@ -47,7 +47,7 @@ func home(w http.ResponseWriter, req *http.Request) {
 
 func calc(w http.ResponseWriter, req *http.Request) {
 	form := newPlateForm()
-	if err := parseForm(req, &form); err != nil {
+	if err := parseForm(req, form); err != nil {
 		http.Error(w, internalServerErr, http.StatusInternalServerError)
 	}
 	form.findCombinations()
