@@ -12,11 +12,6 @@ import (
 
 var internalServerErr = "Internal Server Error. Please try again!"
 
-type PlateForm struct {
-	Barbell float64 `schema:"barbell"`
-	Target  float64 `schema:"target"`
-}
-
 func layoutFiles() []string {
 	files, err := filepath.Glob("views/bulma-*.gohtml")
 	if err != nil {
@@ -42,8 +37,8 @@ func home(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, internalServerErr, http.StatusInternalServerError)
 		return
 	}
-	results := NewResults()
-	if err := t.ExecuteTemplate(w, "bulma", results); err != nil {
+	form := newPlateForm()
+	if err := t.ExecuteTemplate(w, "bulma", form); err != nil {
 		log.Println(err)
 		http.Error(w, internalServerErr, http.StatusInternalServerError)
 		return
@@ -51,19 +46,17 @@ func home(w http.ResponseWriter, req *http.Request) {
 }
 
 func calc(w http.ResponseWriter, req *http.Request) {
-	var plateForm PlateForm
-	results := NewResults()
-	if err := parseForm(req, &plateForm); err != nil {
+	form := newPlateForm()
+	if err := parseForm(req, &form); err != nil {
 		http.Error(w, internalServerErr, http.StatusInternalServerError)
 	}
-	results.Total = (plateForm.Target - plateForm.Barbell) / 2.0
-	results.findCombinations(results.Total)
+	form.findCombinations()
 	t, err := template.ParseFiles(layoutFiles()...)
 	if err != nil {
 		http.Error(w, internalServerErr, http.StatusInternalServerError)
 		return
 	}
-	if err := t.ExecuteTemplate(w, "bulma", results); err != nil {
+	if err := t.ExecuteTemplate(w, "bulma", form); err != nil {
 		log.Println(err)
 		http.Error(w, internalServerErr, http.StatusInternalServerError)
 	}

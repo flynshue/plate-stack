@@ -7,27 +7,42 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func Test_NewPlateForm(t *testing.T) {
+	want := defaultPlateSet
+	form := newPlateForm()
+	fmt.Printf("got: %v\nwanted: %v\n", form.PlateSet, want)
+	assert.ElementsMatch(t, want, form.PlateSet)
+}
+
+func Test_UpdatePlateSet(t *testing.T) {
+	want := []float64{2.5, 5.0, 10.0, 15.0, 25.0, 35.0, 45.0}
+	form := newPlateForm()
+	form.UpdatePlateSet(want)
+	assert.ElementsMatch(t, want, form.PlateSet)
+}
+
 func Test_FindCombinations(t *testing.T) {
-	testCases := []struct {
-		target float64
-		want   [][]float64
-	}{
-		{target: 25.0,
-			want: [][]float64{{10.0, 15.0}, {25.0}},
-		},
-		{target: 72.5,
-			want: [][]float64{{45.0, 15.0, 10.0, 2.5}, {45.0, 25.0, 2.5}},
-		},
+	testCases := []struct{ target float64 }{
+		{target: 95.0},
+		{target: 190.0},
+		{target: 195.0},
 	}
 	for _, tc := range testCases {
 		testName := fmt.Sprintf("Target Weight: %.2f", tc.target)
 		t.Run(testName, func(t *testing.T) {
-			r := NewResults()
-			r.findCombinations(tc.target)
-			got := r.Combinations
-			fmt.Println(got)
-			for i, want := range tc.want {
-				assert.ElementsMatch(t, want, got[i])
+			form := newPlateForm()
+			form.Barbell = 45.0
+			form.TargetWeight = tc.target
+			form.findCombinations()
+			fmt.Println("Found weight combinations: ", form.Combinations)
+			for _, plateSet := range form.Combinations {
+				fmt.Printf("Testing combination %v\n", plateSet)
+				sum := form.Barbell
+				for _, weight := range plateSet {
+					sum += (weight * 2)
+				}
+				fmt.Printf("got: %.2f\nwanted: %.2f\n", sum, tc.target)
+				assert.EqualValues(t, tc.target, sum)
 			}
 		})
 	}
