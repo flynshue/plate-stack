@@ -14,13 +14,7 @@ var internalServerErr = "Internal Server Error. Please try again!"
 
 type PlateForm struct {
 	Barbell float64 `schema:"barbell"`
-	Plate   []Plate `schema:"plate"`
-	Total   float64
-}
-
-type Plate struct {
-	Weight   float64 `schema:"weight"`
-	Quantity float64 `schema:"quantity"`
+	Target  float64 `schema:"target"`
 }
 
 func layoutFiles() []string {
@@ -48,7 +42,9 @@ func home(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, internalServerErr, http.StatusInternalServerError)
 		return
 	}
-	if err := t.ExecuteTemplate(w, "bulma", nil); err != nil {
+	results := NewResults()
+	if err := t.ExecuteTemplate(w, "bulma", results); err != nil {
+		log.Println(err)
 		http.Error(w, internalServerErr, http.StatusInternalServerError)
 		return
 	}
@@ -56,25 +52,21 @@ func home(w http.ResponseWriter, req *http.Request) {
 
 func calc(w http.ResponseWriter, req *http.Request) {
 	var plateForm PlateForm
+	results := NewResults()
 	if err := parseForm(req, &plateForm); err != nil {
 		http.Error(w, internalServerErr, http.StatusInternalServerError)
 	}
+	results.Total = (plateForm.Target - plateForm.Barbell) / 2.0
+	results.findCombinations(results.Total)
 	t, err := template.ParseFiles(layoutFiles()...)
 	if err != nil {
 		http.Error(w, internalServerErr, http.StatusInternalServerError)
 		return
 	}
-	var total float64
-	for _, plate := range plateForm.Plate {
-		plate.Quantity *= 2
-		total += plate.Weight * plate.Quantity
-	}
-	plateForm.Total = total + plateForm.Barbell
-	if err := t.ExecuteTemplate(w, "bulma", plateForm); err != nil {
+	if err := t.ExecuteTemplate(w, "bulma", results); err != nil {
+		log.Println(err)
 		http.Error(w, internalServerErr, http.StatusInternalServerError)
-		return
 	}
-
 }
 
 func main() {
