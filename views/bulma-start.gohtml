@@ -16,8 +16,10 @@
       <p class="subtitle">
         Calculate Weight Plates.
       </p>
-      <div class="content">
-        <p>Enter the quantity of plates for <strong>One Side</strong> of the barbell.</p>
+      <div class="columns">
+        <div class="column">
+          {{template "plateSet" .}}
+        </div>
       </div>
       <div class="columns">
         <div class="column">
@@ -27,8 +29,14 @@
         <div class="column"></div>
         <div class="column"></div>
     </div>
+    {{if .Total}}
     <div class="columns">
-        <div class="column">{{template "results" .}}</div>
+      <div class="column">
+        {{template "results" .}}
+      </div>
+      <div class="column"></div>
+      <div class="column"></div>
     </div>
+    {{end}}
   {{template "footer" .}}
 {{end}}
