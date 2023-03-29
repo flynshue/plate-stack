@@ -49,13 +49,17 @@ jobs:
         id: version
         run: |
           version=$(cat VERSION)
+          if [[ $(git ls-remote --tags origin | grep $version) ]]; then
+              echo "Tag v$version already exists. Please bump VERSION file."
+              exit 1
+          fi
           echo "version=${version}" >> $GITHUB_OUTPUT
 
       - name: Get dry-run mode
         id: dry_run
         run: |
           dry_run=false
-          if ${{ github.event.name == 'pull_request' }}; then
+          if ${{ github.event_name == 'pull_request' }}; then
           echo "dry_run=true" >> $GITHUB_OUTPUT
           fi
 
@@ -70,7 +74,7 @@ jobs:
           dry_run: ${{ steps.dry_run.outputs.dry_run }}
 
       - name: Create a GitHub release
-        if: github.event.name == 'push'
+        if: github.event_name == 'push'
         uses: ncipollo/release-action@v1.12.0
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
@@ -88,6 +92,6 @@ jobs:
          GORELEASER_CURRENT_TAG: ${{ steps.tag_version.outputs.new_tag }}
 
       - name: Push to AWS Public ECR
-        if: github.event.name == 'push'
+        if: github.event_name == 'push'
         run: |
           docker push public.ecr.aws/flynshue/plate-stack:${{ steps.tag_version.outputs.new_tag }}
