@@ -5,7 +5,7 @@ on:
       - main
     paths-ignore:
       - 'README.md'
-  pull:
+  pull_request:
     paths-ignore:
       - 'README.md'
 jobs:
