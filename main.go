@@ -65,7 +65,7 @@ func calc(w http.ResponseWriter, req *http.Request) {
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", home).Methods("GET")
-	r.HandleFunc("/calc", calc).Methods("POST")
+	r.HandleFunc("/", calc).Methods("POST")
 	if err := http.ListenAndServe(":3000", r); err != nil {
 		panic(err)
 	}
