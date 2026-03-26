@@ -16,11 +16,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: 1.25.2
 
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -42,14 +42,14 @@ jobs:
         id: version
         run: |
           version=$(cat VERSION)
-          if [[ $(git ls-remote --tags origin | grep $version) ]]; then
+          if [[ $(git ls-remote --tags origin | grep "refs/tags/v${version}$") ]]; then
               echo "Tag v$version already exists. Please bump VERSION file."
               exit 1
           fi
           echo "version=${version}" >> $GITHUB_OUTPUT
 
       - name: Login to AWS Public ECR
-        uses: docker/login-action@v2.1.0
+        uses: docker/login-action@v4
         with:
           registry: public.ecr.aws
           username: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -59,7 +59,7 @@ jobs:
 
       - name: Bump version and push tag
         id: tag_version
-        uses: mathieudutour/github-tag-action@v6.1
+        uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.version.outputs.version }}
@@ -82,8 +82,11 @@ jobs:
           fi
           echo "args=${args}" >> $GITHUB_OUTPUT
 
+      - name: fetch tags
+        run: git fetch --tags
+
       - name: Run goreleaser
-        uses: goreleaser/goreleaser-action@v3
+        uses: goreleaser/goreleaser-action@v7
         with:
           version: latest
           args: ${{ steps.goreleaser_args.outputs.args }}

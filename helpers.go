@@ -23,8 +23,10 @@ type PlateForm struct {
 }
 
 func newPlateForm() *PlateForm {
+	plates := make([]Plate, len(defaultPlateSet))
+	copy(plates, defaultPlateSet)
 	return &PlateForm{
-		Plates:       defaultPlateSet,
+		Plates:       plates,
 		Combinations: make([][]float64, 0),
 	}
 }
