@@ -82,6 +82,9 @@ jobs:
           fi
           echo "args=${args}" >> $GITHUB_OUTPUT
 
+      - name: fetch tags
+        run: git fetch --tags
+
       - name: Run goreleaser
         uses: goreleaser/goreleaser-action@v3
         with:
