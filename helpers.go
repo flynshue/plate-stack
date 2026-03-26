@@ -6,6 +6,7 @@ var defaultPlateSet = []Plate{
 	{Weight: 10.0, Quantity: 1},
 	{Weight: 15.0, Quantity: 1},
 	{Weight: 25.0, Quantity: 1},
+	{Weight: 35.0, Quantity: 0},
 	{Weight: 45.0, Quantity: 1},
 }
 
