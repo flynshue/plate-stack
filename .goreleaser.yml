@@ -27,3 +27,6 @@ dockers:
       - 'public.ecr.aws/flynshue/plate-stack:{{ .Tag }}'
     extra_files:
     - views
+    skip_push: false
+snapshot:
+  version_template: "{{ .Version }}-{{ .ShortCommit }}"
