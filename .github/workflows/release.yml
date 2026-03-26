@@ -85,3 +85,8 @@ jobs:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
          GORELEASER_CURRENT_TAG: ${{ steps.tag_version.outputs.new_tag }}
 
+      - name: Push snapshot image to ECR
+        if: github.event_name == 'pull_request'
+        run: |
+          short_sha=$(git rev-parse --short HEAD)
+          docker push public.ecr.aws/flynshue/plate-stack:${{ steps.tag_version.outputs.new_tag }}-${short_sha}
