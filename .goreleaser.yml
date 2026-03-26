@@ -30,7 +30,7 @@ dockers:
       - plate-stack # same as project name
     image_templates:
       # Change this to your container registry
-      - 'public.ecr.aws/flynshue/plate-stack:{{ .IsSnapshot }}{{ .Tag }}-{{ .ShortCommit }}{{ else }}{{ .Tag }}{{ end }}-amd64'
+      - 'public.ecr.aws/flynshue/plate-stack:{{ if .IsSnapshot }}{{ .Tag }}-{{ .ShortCommit }}{{ else }}{{ .Tag }}{{ end }}-amd64'
     extra_files:
     - views
   - use: buildx
@@ -47,6 +47,6 @@ dockers:
       - plate-stack # same as project name
     image_templates:
       # Change this to your container registry
-      - 'public.ecr.aws/flynshue/plate-stack:{{ .IsSnapshot }}{{ .Tag }}-{{ .ShortCommit }}{{ else }}{{ .Tag }}{{ end }}-arm64'
+      - 'public.ecr.aws/flynshue/plate-stack:{{ if .IsSnapshot }}{{ .Tag }}-{{ .ShortCommit }}{{ else }}{{ .Tag }}{{ end }}-arm64'
     extra_files:
     - views
