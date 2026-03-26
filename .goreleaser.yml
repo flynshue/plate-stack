@@ -50,3 +50,8 @@ dockers:
       - 'public.ecr.aws/flynshue/plate-stack:{{ if .IsSnapshot }}{{ .Tag }}-{{ .ShortCommit }}{{ else }}{{ .Tag }}{{ end }}-arm64'
     extra_files:
     - views
+docker_manifests:
+  - name_template: 'public.ecr.aws/flynshue/plate-stack:{{ if .IsSnapshot }}{{ .Tag }}-{{ .ShortCommit }}{{ else }}{{ .Tag }}{{ end }}'
+    image_templates:
+      - 'public.ecr.aws/flynshue/plate-stack:{{ if .IsSnapshot }}{{ .Tag }}-{{ .ShortCommit }}{{ else }}{{ .Tag }}{{ end }}-amd64'
+      - 'public.ecr.aws/flynshue/plate-stack:{{ if .IsSnapshot }}{{ .Tag }}-{{ .ShortCommit }}{{ else }}{{ .Tag }}{{ end }}-arm64'
