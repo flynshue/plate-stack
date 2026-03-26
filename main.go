@@ -12,6 +12,10 @@ import (
 
 var internalServerErr = "Internal Server Error. Please try again!"
 
+var tmplFuncs = template.FuncMap{
+	"add1": func(i int) int { return i + 1 },
+}
+
 func layoutFiles() []string {
 	files, err := filepath.Glob("views/bulma-*.gohtml")
 	if err != nil {
@@ -31,7 +35,7 @@ func parseForm(req *http.Request, dst interface{}) error {
 
 func home(w http.ResponseWriter, req *http.Request) {
 	log.Printf("%s: %s\n", req.Method, req.URL)
-	t, err := template.ParseFiles(layoutFiles()...)
+	t, err := template.New("").Funcs(tmplFuncs).ParseFiles(layoutFiles()...)
 	if err != nil {
 		log.Println("Error parsing layout files")
 		http.Error(w, internalServerErr, http.StatusInternalServerError)
@@ -51,7 +55,7 @@ func calc(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, internalServerErr, http.StatusInternalServerError)
 	}
 	form.findCombinations()
-	t, err := template.ParseFiles(layoutFiles()...)
+	t, err := template.New("").Funcs(tmplFuncs).ParseFiles(layoutFiles()...)
 	if err != nil {
 		http.Error(w, internalServerErr, http.StatusInternalServerError)
 		return

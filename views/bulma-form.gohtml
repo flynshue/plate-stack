@@ -1,30 +1,34 @@
 {{define "form"}}
 <form action="/" method="post">
-<div class="field">
-    <label class="label">Barbell Weight in lbs</label>
+  <div class="field">
+    <label class="label">Barbell Weight (lbs)</label>
     <div class="control">
-      <input class="input" type="number" value="45" name="barbell">
+      <input class="input" type="number" value="45" name="barbell" step="any">
     </div>
   </div>
 
   <div class="field">
-    <label class="label">Target Lift Weight in lbs</label>
+    <label class="label">Target Lift Weight (lbs)</label>
     <div class="control">
-      <input class="input" type="number" value="0" name="target">
+      <input class="input" type="number" value="0" name="target" step="2.5" min="0">
     </div>
   </div>
 
+  <label class="label">Available Plates (pairs)</label>
+  <div class="plate-grid">
   {{range $i, $p := .Plates}}
   <input type="hidden" name="plate.{{$i}}.weight" value="{{$p.Weight}}" />
   <div class="field">
-    <label class="label">{{$p.Weight}} lbs Plates (pairs)</label>
+    <label class="label">{{$p.Weight}} lbs</label>
     <div class="control">
       <input class="input" type="number" min="0" name="plate.{{$i}}.quantity" value="{{$p.Quantity}}">
     </div>
   </div>
   {{end}}
-  <div class="control">
-    <button class="button is-primary">Submit</button>
+  </div>
+
+  <div class="control mt-4">
+    <button class="button is-primary is-fullwidth">Calculate</button>
   </div>
 </form>
 {{end}}
@@ -42,17 +46,22 @@
 
 {{define "results"}}
 <div class="content">
-<h3>Weight Plate Combinations <strong>One Side</strong></h3>
-<hr />
-<h4>Target Lift Weight in lbs: {{.TargetWeight}}</h4>
-{{range $index, $combo := .Combinations}}
-<ul>
-  <li>
-    {{range $combo}}
-    {{printf "%.1flbs  " .}}
+  <h3 class="title is-4">Weight Plates Needed <span class="tag is-light is-medium">One side of the bar</span></h3>
+  <p class="subtitle is-6">Target: <strong>{{.TargetWeight}} lbs</strong></p>
+  <hr />
+  {{if .Combinations}}
+    {{range $index, $combo := .Combinations}}
+    <div class="box combo-row">
+      <p class="heading has-text-grey mb-2">Option {{add1 $index}}</p>
+      <div class="tags">
+        {{range $combo}}
+        <span class="tag is-primary is-medium">{{printf "%.4g" .}} lbs</span>
+        {{end}}
+      </div>
+    </div>
     {{end}}
-  </li>
-</ul>
-{{end}}
+  {{else}}
+    <p class="has-text-grey">No combinations found for this target weight.</p>
+  {{end}}
 </div>
 {{end}}
