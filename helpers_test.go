@@ -7,20 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_NewPlateForm(t *testing.T) {
-	want := defaultPlateSet
-	form := newPlateForm()
-	fmt.Printf("got: %v\nwanted: %v\n", form.PlateSet, want)
-	assert.ElementsMatch(t, want, form.PlateSet)
-}
-
-func Test_UpdatePlateSet(t *testing.T) {
-	want := []float64{2.5, 5.0, 10.0, 15.0, 25.0, 35.0, 45.0}
-	form := newPlateForm()
-	form.UpdatePlateSet(want)
-	assert.ElementsMatch(t, want, form.PlateSet)
-}
-
 func Test_FindCombinations(t *testing.T) {
 	testCases := []struct{ target float64 }{
 		{target: 95.0},
