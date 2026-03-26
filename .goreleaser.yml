@@ -1,5 +1,6 @@
 # This is an example .goreleaser.yml file with some sane defaults.
 # Make sure to check the documentation at http://goreleaser.com
+version: 2
 project_name: plate-stack #Name of your project, should match name of github repo
 before:
   hooks:
@@ -10,7 +11,7 @@ builds:
       - CGO_ENABLED=0
     goos:
       - linux
-    gooarch:
+    goarch:
       - amd64
       - arm64
     id: plate-stack # same as project name
