@@ -95,4 +95,5 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           short_sha=$(git rev-parse --short HEAD)
-          docker push public.ecr.aws/flynshue/plate-stack:${{ steps.tag_version.outputs.new_tag }}-${short_sha}
+          docker push public.ecr.aws/flynshue/plate-stack:${{ steps.tag_version.outputs.new_tag }}-${short_sha}-amd64
+          docker push public.ecr.aws/flynshue/plate-stack:${{ steps.tag_version.outputs.new_tag }}-${short_sha}-arm64
