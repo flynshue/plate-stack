@@ -86,7 +86,7 @@ jobs:
         run: git fetch --tags
 
       - name: Run goreleaser
-        uses: goreleaser/goreleaser-action@v3
+        uses: goreleaser/goreleaser-action@v7
         with:
           version: latest
           args: ${{ steps.goreleaser_args.outputs.args }}
