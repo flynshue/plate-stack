@@ -10,23 +10,42 @@ builds:
       - CGO_ENABLED=0
     goos:
       - linux
+    gooarch:
+      - amd64
+      - arm64
     id: plate-stack # same as project name
 dockers:
-  - build_flag_templates:
+  - use: buildx
+    build_flag_templates:
       - "--label=org.opencontainers.image.created={{ .Date }}"
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
       - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
       - "--label=org.opencontainers.image.version={{ .Version }}"
       - "--label=org.opencontainers.image.snapshot={{ .IsSnapshot }}"
+      - "--platform=linux/amd64"
     dockerfile: ./Dockerfile
     goos: linux
     ids:
       - plate-stack # same as project name
     image_templates:
       # Change this to your container registry
-      - 'public.ecr.aws/flynshue/plate-stack:{{ .Tag }}'
+      - 'public.ecr.aws/flynshue/plate-stack:{{ .IsSnapshot }}{{ .Tag }}-{{ .ShortCommit }}{{ else }}{{ .Tag }}{{ end }}-amd64'
     extra_files:
     - views
-    skip_push: false
-snapshot:
-  version_template: "{{ .Version }}-{{ .ShortCommit }}"
+  - use: buildx
+    build_flag_templates:
+      - "--label=org.opencontainers.image.created={{ .Date }}"
+      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
+      - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
+      - "--label=org.opencontainers.image.version={{ .Version }}"
+      - "--label=org.opencontainers.image.snapshot={{ .IsSnapshot }}"
+      - "--platform=linux/arm64"
+    dockerfile: ./Dockerfile
+    goos: linux
+    ids:
+      - plate-stack # same as project name
+    image_templates:
+      # Change this to your container registry
+      - 'public.ecr.aws/flynshue/plate-stack:{{ .IsSnapshot }}{{ .Tag }}-{{ .ShortCommit }}{{ else }}{{ .Tag }}{{ end }}-arm64'
+    extra_files:
+    - views
