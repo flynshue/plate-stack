@@ -1,63 +1,34 @@
 {{define "form"}}
-<form action="/calc" method="post">
-<div class="field">
-    <label class="label">Barbell Weight in lbs</label>
+<form action="/" method="post">
+  <div class="field">
+    <label class="label">Barbell Weight (lbs)</label>
     <div class="control">
-      <input class="input" type="number" value="45" name="barbell">
+      <input class="input" type="number" value="45" name="barbell" step="any">
     </div>
   </div>
 
   <div class="field">
-    <label class="label">Target Lift Weight in lbs</label>
+    <label class="label">Target Lift Weight (lbs)</label>
     <div class="control">
-      <input class="input" type="number" value="0" name="target">
+      <input class="input" type="number" value="0" name="target" step="2.5" min="0">
     </div>
   </div>
 
-  <!-- <input type="hidden" name="plate.0.weight" value="2.5" />
+  <label class="label">Available Plates (pairs)</label>
+  <div class="plate-grid">
+  {{range $i, $p := .Plates}}
+  <input type="hidden" name="plate.{{$i}}.weight" value="{{$p.Weight}}" />
   <div class="field">
-    <label class="label">2.5 lbs Plates</label>
+    <label class="label">{{$p.Weight}} lbs</label>
     <div class="control">
-      <input class="input" type="number" placeholder="2" name="plate.0.quantity">
+      <input class="input" type="number" min="0" name="plate.{{$i}}.quantity" value="{{$p.Quantity}}">
     </div>
   </div>
-  <input type="hidden" name="plate.1.weight" value="5" />
-  <div class="field">
-    <label class="label">5 lbs Plates</label>
-    <div class="control">
-      <input class="input" type="number" placeholder="2" name="plate.1.quantity">
-    </div>
+  {{end}}
   </div>
-  <input type="hidden" name="plate.2.weight" value="10" />
-  <div class="field">
-    <label class="label">10 lbs Plates</label>
-    <div class="control">
-      <input class="input" type="number" placeholder="2" name="plate.2.quantity">
-    </div>
-  </div>
-  <input type="hidden" name="plate.3.weight" value="15" />
-  <div class="field">
-    <label class="label">15 lbs Plates</label>
-    <div class="control">
-      <input class="input" type="number" placeholder="2" name="plate.3.quantity">
-    </div>
-  </div>
-  <input type="hidden" name="plate.4.weight" value="25" />
-  <div class="field">
-    <label class="label">25 lbs Plates</label>
-    <div class="control">
-      <input class="input" type="number" placeholder="2" name="plate.4.quantity">
-    </div>
-  </div>
-  <input type="hidden" name="plate.5.weight" value="45" />
-  <div class="field">
-    <label class="label">45 lbs Plates</label>
-    <div class="control">
-      <input class="input" type="number" placeholder="2" name="plate.5.quantity">
-    </div>
-  </div> -->
-  <div class="control">
-    <button class="button is-primary">Submit</button>
+
+  <div class="control mt-4">
+    <button class="button is-primary is-fullwidth">Calculate</button>
   </div>
 </form>
 {{end}}
@@ -75,17 +46,22 @@
 
 {{define "results"}}
 <div class="content">
-<h3>Weight Plate Combinations <strong>One Side</strong></h3>
-<hr />
-<h4>Target Lift Weight in lbs: {{.TargetWeight}}</h4>
-{{range $index, $combo := .Combinations}}
-<ul>
-  <li>
-    {{range $combo}}
-    {{printf "%.1flbs  " .}}
+  <h3 class="title is-4">Weight Plates Needed <span class="tag is-light is-medium">One side of the bar</span></h3>
+  <p class="subtitle is-6">Target: <strong>{{.TargetWeight}} lbs</strong></p>
+  <hr />
+  {{if .Combinations}}
+    {{range $index, $combo := .Combinations}}
+    <div class="box combo-row">
+      <p class="heading has-text-grey mb-2">Option {{add1 $index}}</p>
+      <div class="tags">
+        {{range $combo}}
+        <span class="tag is-primary is-medium">{{printf "%.4g" .}} lbs</span>
+        {{end}}
+      </div>
+    </div>
     {{end}}
-  </li>
-</ul>
-{{end}}
+  {{else}}
+    <p class="has-text-grey">No combinations found for this target weight.</p>
+  {{end}}
 </div>
 {{end}}

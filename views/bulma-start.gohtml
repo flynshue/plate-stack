@@ -6,37 +6,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Plate Stack</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+      .hero.is-app {
+        background: linear-gradient(135deg, #00d1b2 0%, #00947e 100%);
+      }
+      .plate-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+      }
+      .plate-grid .field {
+        margin-bottom: 0;
+      }
+      .plate-grid label {
+        font-size: 0.75rem;
+      }
+      .combo-row {
+        margin-bottom: 0.75rem;
+      }
+      .results-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        min-height: 300px;
+        color: #b5b5b5;
+        text-align: center;
+      }
+      .results-placeholder .placeholder-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        line-height: 1;
+      }
+    </style>
   </head>
   <body>
+  <section class="hero is-app">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title has-text-white">Plate Stack Calculator</h1>
+        <p class="subtitle has-text-white-ter">Calculate Weight Plates for Barbell.</p>
+      </div>
+    </div>
+  </section>
   <section class="section">
     <div class="container">
-      <h1 class="title">
-       Plate Stack Calculator
-      </h1>
-      <p class="subtitle">
-        Calculate Weight Plates.
-      </p>
-      <div class="columns">
-        <div class="column">
-          {{template "plateSet" .}}
-        </div>
-      </div>
-      <div class="columns">
-        <div class="column">
+      <div class="columns is-variable is-6">
+        <div class="column is-two-fifths">
+          <div class="box">
             {{template "form" .}}
+          </div>
         </div>
-        <div class="column"></div>
-        <div class="column"></div>
-        <div class="column"></div>
-    </div>
-    {{if .TargetWeight}}
-    <div class="columns">
-      <div class="column">
-        {{template "results" .}}
+        <div class="column">
+          {{if .TargetWeight}}
+            {{template "results" .}}
+          {{else}}
+            <div class="results-placeholder">
+              <div class="placeholder-icon">🏋️</div>
+              <p class="is-size-5 has-text-weight-semibold">No results yet</p>
+              <p class="is-size-6">Enter your target weight and click Calculate.</p>
+            </div>
+          {{end}}
+        </div>
       </div>
-      <div class="column"></div>
-      <div class="column"></div>
-    </div>
-    {{end}}
-  {{template "footer" .}}
+    {{template "footer" .}}
 {{end}}
